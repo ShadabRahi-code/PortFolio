@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omniscient AI - सर्वज्ञ AI</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --text: #ffffff;
+            --bg: #1a1a2e;
+            --input-bg: #0f3460;
+            --button: #16213e;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: all 0.5s;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        #ask-btn, #voice-btn {
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #ask-btn:hover, #voice-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .response-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--button);
+            border: none;
+            color: var(--text);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .feature-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .feature-btn {
+            padding: 10px 15px;
+            background: var(--button);
+            color: var(--text);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-btn:hover {
+            background: var(--primary);
+        }
+
+        /* Dark/Light Mode */
+        .light-mode {
+            --primary: #3a7bd5;
+            --secondary: #00d2ff;
+            --text: #333333;
+            --bg: #f5f7fa;
+            --input-bg: #e0e5ec;
+            --button: #d1d9e6;
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
+    
+    <div class="container">
+        <h1>Omniscient AI <span class="pulse">✨</span></h1>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="कोई भी सवाल पूछो... (जैसे: 'चंद्रमा पर जीवन है?')">
+            <button id="voice-btn" title="Voice Input">🎤</button>
+            <button id="ask-btn">पूछो</button>
+        </div>
+        
+        <div class="response-area" id="response-area">
+            <p>नमस्ते! मैं Omniscient AI हूँ। आप मुझसे कुछ भी पूछ सकते हैं!</p>
+        </div>
+
+        <div class="feature-buttons">
+            <button class="feature-btn" onclick="searchWeb()">🌐 वेब सर्च</button>
+            <button class="feature-btn" onclick="showCalculator()">🧮 कैलकुलेटर</button>
+            <button class="feature-btn" onclick="showTranslator()">🌍 ट्रांसलेटर</button>
+        </div>
+    </div>
+
+    <script>
+        // Dark/Light Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        // AI Response Generator
+        document.getElementById('ask-btn').addEventListener('click', generateResponse);
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateResponse();
+        });
+
+        // Voice Recognition
+        document.getElementById('voice-btn').addEventListener('click', startVoiceRecognition);
+
+        function generateResponse() {
+            const userInput = document.getElementById('user-input').value.trim();
+            if (!userInput) return;
+
+            const responseArea = document.getElementById('response-area');
+            
+            // Add user question
+            responseArea.innerHTML += `<p><strong>आप:</strong> ${userInput}</p>`;
+            
+            // Simulate AI thinking
+            responseArea.innerHTML += `<p><strong>AI:</strong> विचार कर रहा हूँ...</p>`;
+            responseArea.scrollTop = responseArea.scrollHeight;
+            
+            // Generate response after delay
+            setTimeout(() => {
+                let response;
+                
+                // Check if it's a math question
+                if (userInput.match(/[+\-*/^()]/) || 
+                    userInput.includes('गणना') || 
+                    userInput.includes('calculate')) {
+                    try {
+                        const result = eval(userInput.replace(/[^0-9+\-*/().]/g, ''));
+                        response = `गणना परिणाम: ${result}`;
+                    } catch {
+                        response = "मैं इस गणितीय प्रश्न को हल नहीं कर पाया";
+                    }
+                } 
+                // Check if it's a translation request
+                else if (userInput.includes('अनुवाद') || 
+                         userInput.includes('translate')) {
+                    response = "मेरा ट्रांसलेशन फीचर अभी विकास में है। जल्द ही उपलब्ध होगा!";
+                }
+                // Default AI response
+                else {
+                    const responses = [
+                        `हाँ, ${userInput} संभव है। शोध के अनुसार, यह तकनीकी रूप से संभव है।`,
+                        `नहीं, ${userInput} का कोई वैज्ञानिक प्रमाण नहीं है।`,
+                        `${userInput} के बारे में अभी शोध चल रहा है।`,
+                        `यह एक जटिल प्रश्न है। संक्षिप्त उत्तर: हाँ और नहीं दोनों।`,
+                        `मेरे डेटाबेस के अनुसार, ${userInput} का उत्तर स्थिति पर निर्भर करता है।`
+                    ];
+                    response = responses[Math.floor(Math.random() * responses.length)];
+                }
+                
+                responseArea.innerHTML = responseArea.innerHTML.replace('विचार कर रहा हूँ...', response);
+                document.getElementById('user-input').value = '';
+            }, 1500);
+        }
+
+        function startVoiceRecognition() {
+            const responseArea = document.getElementById('response-area');
+            responseArea.innerHTML += `<p><strong>AI:</strong> मैं सुन रहा हूँ... बोलिए</p>`;
+            
+            // Check if browser supports speech recognition
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'hi-IN';
+                recognition.start();
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('user-input').value = transcript;
+                    generateResponse();
+                };
+                
+                recognition.onerror = function(event) {
+                    responseArea.innerHTML += `<p><strong>AI:</strong> वॉइस पहचान में त्रुटि: ${event.error}</p>`;
+                };
+            } else {
+                responseArea.innerHTML += `<p><strong>AI:</strong> आपका ब्राउज़र वॉइस रिकग्निशन सपोर्ट नहीं करता</p>`;
+            }
+        }
+
+        function searchWeb() {
+            const userInput = document.getElementById('user-input').value.trim();
+            if (!userInput) {
+                alert("कृपया सर्च करने के लिए कुछ टाइप करें");
+                return;
+            }
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(userInput)}`, '_blank');
+        }
+
+        function showCalculator() {
+            const responseArea = document.getElementById('response-area');
+            responseArea.innerHTML = `
+                <h3>कैलकुलेटर मोड</h3>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;">
+                    <button onclick="appendToCalc('7')">7</button>
+                    <button onclick="appendToCalc('8')">8</button>
+                    <button onclick="appendToCalc('9')">9</button>
+                    <button onclick="appendToCalc('/')">/</button>
+                    <button onclick="appendToCalc('4')">4</button>
+                    <button onclick="appendToCalc('5')">5</button>
+                    <button onclick="appendToCalc('6')">6</button>
+                    <button onclick="appendToCalc('*')">×</button>
+                    <button onclick="appendToCalc('1')">1</button>
+                    <button onclick="appendToCalc('2')">2</button>
+                    <button onclick="appendToCalc('3')">3</button>
+                    <button onclick="appendToCalc('-')">-</button>
+                    <button onclick="appendToCalc('0')">0</button>
+                    <button onclick="appendToCalc('.')">.</button>
+                    <button onclick="calculate()" style="grid-column: span 2; background: var(--primary);">=</button>
+                    <button onclick="clearCalc()" style="background: #ff416c;">C</button>
+                    <button onclick="backspace()">⌫</button>
+                </div>
+                <div style="margin-top: 15px; background: var(--input-bg); padding: 10px; border-radius: 5px;">
+                    <input type="text" id="calc-input" style="width: 100%; background: transparent; border: none; color: var(--text); font-size: 1.2em;" readonly>
+                </div>
+            `;
+        }
+
+        function appendToCalc(value) {
+            const calcInput = document.getElementById('calc-input');
+            calcInput.value = (calcInput.value || '') + value;
+        }
+
+        function clearCalc() {
+            document.getElementById('calc-input').value = '';
+        }
+
+        function backspace() {
+            const calcInput = document.getElementById('calc-input');
+            calcInput.value = calcInput.value.slice(0, -1);
+        }
+
+        function calculate() {
+            const calcInput = document.getElementById('calc-input');
+            try {
+                calcInput.value = eval(calcInput.value);
+            } catch {
+                calcInput.value = "Error";
+            }
+        }
+
+        function showTranslator() {
+            const responseArea = document.getElementById('response-area');
+            responseArea.innerHTML = `
+                <h3>ट्रांसलेटर मोड</h3>
+                <div style="margin-top: 15px;">
+                    <select id="source-lang" style="padding: 8px; border-radius: 5px; background: var(--input-bg); color: var(--text); border: none; margin-right: 10px;">
+                        <option value="hi">हिंदी</option>
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                    <select id="target-lang" style="padding: 8px; border-radius: 5px; background: var(--input-bg); color: var(--text); border: none;">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <textarea id="translate-input" style="width: 100%; height: 80px; margin-top: 10px; background: var(--input-bg); color: var(--text); border: none; border-radius: 5px; padding: 10px;"></textarea>
+                <button onclick="translateText()" style="margin-top: 10px; padding: 10px 15px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">अनुवाद करें</button>
+                <div id="translation-result" style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 5px;"></div>
+            `;
+        }
+
+        function translateText() {
+            const text = document.getElementById('translate-input').value;
+            const sourceLang = document.getElementById('source-lang').value;
+            const targetLang = document.getElementById('target-lang').value;
+            
+            if (!text) {
+                alert("कृपया अनुवाद के लिए कुछ टेक्स्ट डालें");
+                return;
+            }
+            
+            // Simple translation examples (in a real app, you would use an API)
+            const translations = {
+                "hi-en": {
+                    "नमस्ते": "Hello",
+                    "धन्यवाद": "Thank you",
+                    "क्या हाल है": "How are you"
+                },
+                "en-hi": {
+                    "Hello": "नमस्ते",
+                    "Thank you": "धन्यवाद",
+                    "How are you": "क्या हाल है"
+                }
+            };
+            
+            const translationKey = `${sourceLang}-${targetLang}`;
+            const resultDiv = document.getElementById('translation-result');
+            
+            if (translations[translationKey] && translations[translationKey][text]) {
+                resultDiv.innerHTML = `<strong>अनुवाद:</strong> ${translations[translationKey][text]}`;
+            } else {
+                resultDiv.innerHTML = "मेरा ट्रांसलेशन फीचर अभी सीमित है। असली API जल्द ही जोड़ूंगा!";
+            }
+        }
+    </script>
+</body>
+</html>
