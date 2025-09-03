@@ -52,6 +52,14 @@
       text-shadow: var(--gold-glow);
     }
 
+    .logo p{
+      font-size: 15px;
+      margin-top: -5px;
+      margin-left: 20px;
+      color: var(--muted);
+      font-weight: 200;
+    }
+
     nav a {
       margin: 0 14px;
       color: var(--muted);
@@ -138,9 +146,22 @@
       text-decoration: none;
     }
 
-    /* Work Cards */
+   /* Work Cards */
     section {
       padding: 80px 10%;
+    }
+
+    #work h2{
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #reviews h2{
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #contact h2{
+      text-align: center;
+      margin-bottom: 30px;
     }
 
     .work-cards {
@@ -290,13 +311,59 @@
       text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 40px #FFD700;
       transform: scale(1.2);
     }
+
+    /* Blob CSS */
+    :root {
+      --pf-gold: #ffd700;
+      --pf-gold-soft: rgba(255, 215, 0, 0.2);
+    }
+
+    .pf-blob-wrap {
+      position: relative;
+      width: 280px;
+      /* blob size */
+      height: 320px;
+      display: flex;
+      align-items: flex-end;
+      /* niche align karenge */
+      justify-content: center;
+    }
+
+    /* golden liquid blob */
+    .pf-blob {
+      position: relative;
+      width: 100%;
+      height: 80%;
+      border-radius: 60% 40% 30% 70% / 55% 35% 65% 45%;
+      animation: pf-blob-morph 8s ease-in-out infinite;
+      background: radial-gradient(circle at 30% 30%, var(--pf-gold-soft), transparent 70%);
+      box-shadow: 0 0 40px var(--pf-gold);
+      overflow-x: visible;
+      overflow-y: visible;
+      /* niche ka part andar hi dikhega */
+    }
+
+    /* image upar se bahar nikal rahi hai */
+    .pf-blob img {
+      position: absolute;
+      bottom: -10px;
+      /* niche ka part blob ke andar */
+      left: 50%;
+      top: -160px;
+      transform: translateX(-50%) translateY(0%);
+      width: 100%;
+      height: auto;
+      object-fit: inside;
+    }
+    
   </style>
 </head>
 
 <body>
 
   <header>
-    <div class="logo"><span class="p">P</span>ort<span class="f">F</span>olio<p>Web-Designer</p>
+    <div class="logo">
+      <span class="p">P</span>ort<span class="f">F</span>olio<p>Web-Designer</p>
     </div>
     <nav>
       <a href="#home">Home</a>
@@ -309,13 +376,16 @@
   <section class="hero" id="home">
     <div class="hero-text">
       <h1>Hello, I'm Shadab Rahi</h1>
-      <h2>A fullstack web Developer...</h2>
-      <p>I create responsive, modern, professional websites with live on browser.</p>
+      <h2>A fullstack web Developer & Video Editor</h2>
+      <p>I create responsive, modern, professional websites with live on browser.<br>Edits video like a professional</p>
       <button class="btn"><a href="#work">Explore My Work</a></button>
     </div>
-    <div class="portrait-card" id="portraitCard">
-      <img src="Main image.jpg" alt="Me">
+    <div class="pf-blob-wrap">
+      <div class="pf-blob">
+        <img src="Main Image.png" alt="My portrait">
+      </div>
     </div>
+
   </section>
 
   <section id="work">
@@ -377,7 +447,7 @@
     <div class="social-icons">
       <a href="https://github.com/ShadabRahi-code" target="_blank"><i class="fab fa-github"></i></a>
       <a href="https://www.youtube.com/@HEY_SHADAB" target="_blank"><i class="fab fa-youtube"></i></a>
-      <a href="https://twitter.com/yourusername" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
       <a href="https://www.instagram.com/_shadab.rahi" target="_blank"><i class="fab fa-instagram"></i></a>
     </div>
   </footer>
